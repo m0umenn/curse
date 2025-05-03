@@ -25,4 +25,13 @@ public abstract class Utilisateur {
 
     // Méthode abstraite pour obtenir le type d'utilisateur
     public abstract String getType();
+
+    @Override
+    public String toString() {
+        return "Utilisateur{" +
+                "matricule='" + matricule + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", nom='" + nom + '\'' +
+                '}';
+    }
 }

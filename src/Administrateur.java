@@ -6,6 +6,7 @@ public class Administrateur {
     private List<Utilisateur> utilisateurs;
     private List<Course> courses;
     private List<Utilisateur> utilisateursBannis;
+    private String motDePasse = "admin";
 
     public Administrateur() {
         this.utilisateurs = new ArrayList<>();
@@ -42,6 +43,7 @@ public class Administrateur {
     // Visualiser l’historique des courses passées
     public List<Course> getHistoriqueCourses() {
         // Pour simplifier, on retourne toutes les courses
+        // ajoute les horaires comme un log
         return courses;
     }
 
@@ -77,4 +79,10 @@ public class Administrateur {
     public List<Utilisateur> getUtilisateursBannis() {
         return utilisateursBannis;
     }
+
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+
 }
