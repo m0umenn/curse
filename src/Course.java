@@ -10,8 +10,9 @@ public class Course {
     private Profil.TypeCourse typeCourse;
     private List<Evaluation> evaluations; // Liste des évaluations reçues
 
-    public Course(Utilisateur chauffeur, String itineraire, String horaires, Profil.TypeCourse typeCourse) {
+    public Course(Utilisateur chauffeur,Utilisateur pass ,String itineraire, String horaires, Profil.TypeCourse typeCourse) {
         this.chauffeur = chauffeur;
+        this.passagers.add(pass);
         this.itineraire = itineraire;
         this.horaires = horaires;
         this.typeCourse = typeCourse;
@@ -36,4 +37,15 @@ public class Course {
     public String getHoraires() { return horaires; }
     public Profil.TypeCourse getTypeCourse() { return typeCourse; }
     public List<Evaluation> getEvaluations() { return evaluations; }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "typeCourse=" + typeCourse +
+                ", horaires='" + horaires + '\'' +
+                ", itineraire='" + itineraire + '\'' +
+                ", passagers=" + passagers +
+                ", chauffeur=" + chauffeur +
+                '}';
+    }
 }

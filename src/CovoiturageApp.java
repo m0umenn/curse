@@ -16,7 +16,8 @@ public class CovoiturageApp {
             System.out.println("3. Modifier le profil d'un utilisateur");
             System.out.println("4. Demander une course (passager)");
             System.out.println("5. Sauvegarder les utilisateurs");
-            System.out.println("6. Quitter");
+            System.out.println("6. Administrateur");
+            System.out.println("7. Quitter");
             System.out.print("Votre choix : ");
             int choix = scanner.nextInt();
             scanner.nextLine(); // Consommer le retour à la ligne
@@ -38,7 +39,10 @@ public class CovoiturageApp {
                     FichierUtilisateurs.sauvegarderUtilisateurs(admin.getUtilisateurs(), FICHIER_UTILISATEURS);
                     System.out.println("Utilisateurs sauvegardés.");
                     break;
-                case 6:
+                case 6 :
+                    administrateurtools(0);
+                    break;
+                case 7:
                     quitter = true;
                     break;
                 default:
@@ -190,6 +194,7 @@ public class CovoiturageApp {
                     && u.getProfil().getItineraire().equalsIgnoreCase(itineraireRecherche)) {
                 chauffeursDisponibles.add(u);
             }
+            // add preferences and  disponibilite match
         }
 
         if (chauffeursDisponibles.isEmpty()) {
@@ -204,16 +209,86 @@ public class CovoiturageApp {
                     " (" + chauffeur.getMatricule() + "), Disponibilités : " + chauffeur.getProfil().getDisponibilites());
         }
 
+
         System.out.print("Choisissez un chauffeur (numéro) ou 0 pour annuler : ");
         int choix = scanner.nextInt();
         scanner.nextLine();
+
         if (choix > 0 && choix <= chauffeursDisponibles.size()) {
             Utilisateur chauffeurChoisi = chauffeursDisponibles.get(choix - 1);
             System.out.println("Vous avez rejoint la course du chauffeur " +
                     chauffeurChoisi.getNom() + " " + chauffeurChoisi.getPrenom() + " !");
             // Ici, tu pourrais ajouter la logique pour enregistrer la course/passager si tu veux aller plus loin
+            Course c = new Course(chauffeurChoisi,passager,itineraireRecherche,chauffeurChoisi.getProfil().getDisponibilites(),chauffeurChoisi.getProfil().getTypeCourse());
+            admin.ajouterCourse(c);
         } else {
             System.out.println("Action annulée.");
         }
     }
-}
+
+    public static void administrateurtools(Integer tries) {
+        System.out.println("please enter admin password");
+        String enteredMDP = scanner.nextLine();
+        if (enteredMDP.equals(admin.getMotDePasse())) {
+            System.out.println("1- Bannir utilisateur");
+            System.out.println("2- Afficher utilisateurs");
+            System.out.println("3- Afficher les courses en cours");
+            System.out.println("4- Afficher utilisateurs bannus");
+            System.out.println("Votre choix : ");
+            String choice = scanner.nextLine();
+
+            switch(choice) {
+                case "1":
+                    System.out.println("User ID to be banned");
+                    String banID = scanner.nextLine();
+                    Utilisateur tobeBanned = null;
+                    for (Utilisateur u : admin.getUtilisateurs()) {
+                        if (u.matricule.equals(banID)) {
+                            tobeBanned = u;
+                            break;
+                        }
+                    }
+                    if (tobeBanned == null) {
+                        System.out.println("user doesnt exist");
+                    }
+                    admin.bannirUtilisateur(tobeBanned);
+                    break;
+                case "2":
+                    if (admin.getUtilisateurs() != null && !admin.getUtilisateurs().isEmpty()) {
+                        for (Utilisateur u : admin.getUtilisateurs()) {
+                            System.out.println(u.toString());
+                        }
+                    } else {
+                        System.out.println("No users found.");
+                    }
+                    break;
+                case "3":
+                    if (admin.getCourses() != null && !admin.getCourses().isEmpty()) {
+                        for (Course c : admin.getCourses()) {
+                            System.out.println(c.toString());
+                        }
+                    } else {
+                        System.out.println("No rides found.");
+                    }
+                    break;
+                case "4":
+                    if (admin.getUtilisateursBannis() != null && !admin.getUtilisateursBannis().isEmpty()) {
+                        for (Utilisateur u : admin.getUtilisateursBannis()) {
+                            System.out.println(u.toString());
+                        }
+                    } else {
+                        System.out.println("No users found.");
+                    }
+                    break;
+                default:
+                    System.out.println("invalid choice");
+            }
+        } else {
+        if (tries < 3) {
+            System.out.println("wrong password please try again"+" "+ String.valueOf(3-tries) +" left");
+            administrateurtools(tries +1 );
+        } else {
+            System.exit(0);
+        }
+    }
+}}
