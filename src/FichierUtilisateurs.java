@@ -36,7 +36,7 @@ public class FichierUtilisateurs {
                 String[] parts = ligne.split(";");
                 String type = parts[0];
                 if (type.equals("Etudiant")) {
-                    utilisateurs.add(new Etudiant(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7], parts[8]));
+                    utilisateurs.add(new Etudiant(parts[1], parts[2], parts[3], Integer.parseInt(parts[5]), parts[6], parts[7]));
                 } else if (type.equals("Enseignant")) {
                     utilisateurs.add(new Enseignant(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7]));
                 } else if (type.equals("ATS")) {
