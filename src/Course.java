@@ -12,12 +12,12 @@ public class Course {
 
     public Course(Utilisateur chauffeur,Utilisateur pass ,String itineraire, String horaires, Profil.TypeCourse typeCourse) {
         this.chauffeur = chauffeur;
-        this.passagers.add(pass);
         this.itineraire = itineraire;
         this.horaires = horaires;
         this.typeCourse = typeCourse;
         this.passagers = new ArrayList<>();
         this.evaluations = new ArrayList<>();
+        this.passagers.add(pass);
     }
 
     // Ajouter un passager à la course

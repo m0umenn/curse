@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.*;
 
 public class CovoiturageApp {
@@ -7,6 +8,8 @@ public class CovoiturageApp {
 
     public static void main(String[] args) {
         // Charger les utilisateurs au démarrage
+        File fichierUtilisateurs = new File(FICHIER_UTILISATEURS);
+        System.out.println("Chargement des utilisateurs depuis: " + fichierUtilisateurs.getAbsolutePath());
         admin.getUtilisateurs().addAll(FichierUtilisateurs.chargerUtilisateurs(FICHIER_UTILISATEURS));
         boolean quitter = false;
         while (!quitter) {
@@ -16,8 +19,9 @@ public class CovoiturageApp {
             System.out.println("3. Modifier le profil d'un utilisateur");
             System.out.println("4. Demander une course (passager)");
             System.out.println("5. Sauvegarder les utilisateurs");
-            System.out.println("6. Administrateur");
-            System.out.println("7. Quitter");
+            System.out.println("6. Evaluer un chauffeur");       
+            System.out.println("7. Administrateur");
+            System.out.println("8. Quitter et sauvegarder");
             System.out.print("Votre choix : ");
             int choix = scanner.nextInt();
             scanner.nextLine(); // Consommer le retour à la ligne
@@ -40,9 +44,12 @@ public class CovoiturageApp {
                     System.out.println("Utilisateurs sauvegardés.");
                     break;
                 case 6 :
+                    evaluerChauffeur();
+                    break;
+                case 7 :
                     administrateurtools(0);
                     break;
-                case 7:
+                case 8:
                     quitter = true;
                     break;
                 default:
@@ -291,4 +298,90 @@ public class CovoiturageApp {
             System.exit(0);
         }
     }
-}}
+}
+
+        public static void evaluerChauffeur() {
+            System.out.println("Entrez votre matricule : ");
+            String matricule = scanner.nextLine();
+            
+            if (admin.getCourses() == null || admin.getCourses().isEmpty()) {
+                System.out.println("Aucune course disponible.");
+                return;
+            }
+            
+            boolean found = false;
+            List<Course> coursesForUser = new ArrayList<>();
+            
+            // Recherche des courses où l'utilisateur est passager
+            for (Course c : admin.getCourses()) {
+                for (Utilisateur u : c.getPassagers()) {
+                    if (u.getMatricule().equals(matricule)) {
+                        coursesForUser.add(c);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!found) {
+                System.out.println("Aucune course trouvée avec votre matricule.");
+                return;
+            }
+            
+            // Afficher les courses trouvées
+            System.out.println("Courses trouvées :");
+            for (int i = 0; i < coursesForUser.size(); i++) {
+                Course c = coursesForUser.get(i);
+                System.out.println((i+1) + ". Chauffeur: " + c.getChauffeur().getNom() + 
+                                   " " + c.getChauffeur().getPrenom() +
+                                   ", Itinéraire: " + c.getItineraire());
+            }
+            
+            System.out.print("Choisissez une course à évaluer (numéro) : ");
+            int choixCourse = scanner.nextInt();
+            scanner.nextLine(); // Consommer la nouvelle ligne
+            
+            if (choixCourse < 1 || choixCourse > coursesForUser.size()) {
+                System.out.println("Choix invalide.");
+                return;
+            }
+            
+            Course courseChoisie = coursesForUser.get(choixCourse - 1);
+            Utilisateur chauffeur = courseChoisie.getChauffeur();
+            
+            System.out.println("Vous allez évaluer le chauffeur : " + chauffeur.getNom() + " " + chauffeur.getPrenom());
+            
+            // Demande de la note
+            System.out.print("Entrez votre note (0-5) : ");
+            int note = -1;
+            do {
+                try {
+                    note = scanner.nextInt();
+                    scanner.nextLine(); // Consommer la nouvelle ligne
+                } catch (InputMismatchException e) {
+                    scanner.nextLine(); // Nettoyer l'entrée invalide
+                    System.out.println("Veuillez entrer un nombre valide.");
+                }
+            } while (note < 0 || note > 5);
+            
+            // Demande du commentaire
+            System.out.print("Entrez votre commentaire : ");
+            String commentaire = scanner.nextLine();
+            
+            // Trouver l'utilisateur correspondant au matricule
+            Utilisateur passager = null;
+            for (Utilisateur u : courseChoisie.getPassagers()) {
+                if (u.getMatricule().equals(matricule)) {
+                    passager = u;
+                    break;
+                }
+            }
+            
+            // Créer et ajouter l'évaluation
+            Evaluation eval = new Evaluation(passager, chauffeur, note, commentaire);
+            courseChoisie.ajouterEvaluation(eval);
+            
+            System.out.println("Évaluation enregistrée avec succès !");
+            System.out.println(eval.toString());
+        }
+    }
