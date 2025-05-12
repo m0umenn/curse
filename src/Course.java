@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 // Classe Course
 public class Course {
@@ -9,8 +10,9 @@ public class Course {
     private String horaires;
     private Profil.TypeCourse typeCourse;
     private List<Evaluation> evaluations; // Liste des évaluations reçues
+    private LocalDateTime dateTime;
 
-    public Course(Utilisateur chauffeur,Utilisateur pass ,String itineraire, String horaires, Profil.TypeCourse typeCourse) {
+    public Course(Utilisateur chauffeur, Utilisateur pass, String itineraire, String horaires, Profil.TypeCourse typeCourse, LocalDateTime dateTime) {
         this.chauffeur = chauffeur;
         this.itineraire = itineraire;
         this.horaires = horaires;
@@ -18,6 +20,7 @@ public class Course {
         this.passagers = new ArrayList<>();
         this.evaluations = new ArrayList<>();
         this.passagers.add(pass);
+        this.dateTime = dateTime;
     }
 
     // Ajouter un passager à la course
@@ -37,6 +40,8 @@ public class Course {
     public String getHoraires() { return horaires; }
     public Profil.TypeCourse getTypeCourse() { return typeCourse; }
     public List<Evaluation> getEvaluations() { return evaluations; }
+    public LocalDateTime getDateTime() { return dateTime; }
+    public void setDateTime(LocalDateTime dateTime) { this.dateTime = dateTime; }
 
     @Override
     public String toString() {
@@ -46,6 +51,7 @@ public class Course {
                 ", itineraire='" + itineraire + '\'' +
                 ", passagers=" + passagers +
                 ", chauffeur=" + chauffeur +
+                ", dateTime=" + dateTime +
                 '}';
     }
 }

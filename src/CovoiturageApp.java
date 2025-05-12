@@ -15,7 +15,6 @@ public class CovoiturageApp {
         while (!quitter) {
             System.out.println("\n--- Menu Principal ---");
             System.out.println("1. Ajouter un utilisateur");
-
             System.out.println("2. Modifier le profil d'un utilisateur");
             System.out.println("3. Demander une course (passager)");
             System.out.println("4. Sauvegarder les utilisateurs");
@@ -262,9 +261,14 @@ public class CovoiturageApp {
             Utilisateur chauffeurChoisi = chauffeursDisponibles.get(choix - 1);
             System.out.println("Vous avez rejoint la course du chauffeur " +
                     chauffeurChoisi.getNom() + " " + chauffeurChoisi.getPrenom() + " !");
+            // Prompt for date/time
+            System.out.print("Entrez la date et l'heure de la course (format: yyyy-MM-ddTHH:mm, ex: 2024-06-01T14:30) : ");
+            String dateTimeStr = scanner.nextLine();
+            java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(dateTimeStr);
             Course c = new Course(chauffeurChoisi, passager, itineraireRecherche, 
                                 chauffeurChoisi.getProfil().getDisponibilites(),
-                                chauffeurChoisi.getProfil().getTypeCourse());
+                                chauffeurChoisi.getProfil().getTypeCourse(),
+                                dateTime);
             admin.ajouterCourse(c);
         } else {
             System.out.println("Action annulée.");
@@ -279,6 +283,12 @@ public class CovoiturageApp {
             System.out.println("2- Afficher utilisateurs");
             System.out.println("3- Afficher les courses en cours");
             System.out.println("4- Afficher utilisateurs bannus");
+            System.out.println("5- Visualiser les courses en cours à un instant donné");
+            System.out.println("6- Visualiser le planning journalier");
+            System.out.println("7- Visualiser le planning hebdomadaire");
+            System.out.println("8- Visualiser l'historique des courses passées");
+            System.out.println("9- Statistiques d'utilisation");
+            System.out.println("10- Bannir utilisateurs à mauvaise réputation");
             System.out.println("Votre choix : ");
             String choice = scanner.nextLine();
 
@@ -324,6 +334,67 @@ public class CovoiturageApp {
                     } else {
                         System.out.println("No users found.");
                     }
+                    break;
+                case "5":
+                    System.out.println("--- Courses en cours (futures) ---");
+                    for (Course c : admin.getOngoingCourses()) {
+                        System.out.println(c);
+                    }
+                    break;
+                case "6":
+                    System.out.print("Entrez la date (format: yyyy-MM-dd) : ");
+                    String dayStr = scanner.nextLine();
+                    java.time.LocalDate day = java.time.LocalDate.parse(dayStr);
+                    System.out.println("--- Planning journalier ---");
+                    for (Course c : admin.getCoursesByDay(day)) {
+                        System.out.println(c);
+                    }
+                    break;
+                case "7":
+                    System.out.print("Entrez le premier jour de la semaine (format: yyyy-MM-dd) : ");
+                    String weekStr = scanner.nextLine();
+                    java.time.LocalDate weekStart = java.time.LocalDate.parse(weekStr);
+                    System.out.println("--- Planning hebdomadaire ---");
+                    for (Course c : admin.getCoursesByWeek(weekStart)) {
+                        System.out.println(c);
+                    }
+                    break;
+                case "8":
+                    System.out.println("--- Historique des courses passées ---");
+                    for (Course c : admin.getHistoriqueCourses()) {
+                        System.out.println(c);
+                    }
+                    break;
+                case "9":
+                    System.out.println("--- Statistiques d'utilisation ---");
+                    System.out.println("Nombre d'étudiants: " + admin.getNombreEtudiants());
+                    System.out.println("Nombre d'enseignants: " + admin.getNombreEnseignants());
+                    System.out.println("Nombre d'ATS: " + admin.getNombreATS());
+                    System.out.println("Nombre d'utilisateurs actifs: " + admin.getNombreUtilisateursActifs());
+                    System.out.println("Catégories qui proposent plus de courses: " + admin.getCourseCountsByUserType());
+                    System.out.println("Facultés: " + admin.getFacultyCounts());
+                    System.out.println("Top 10 chauffeurs: ");
+                    for (Utilisateur u : admin.getTop10Drivers()) {
+                        System.out.println(u + " | Reputation: " + u.getReputation());
+                    }
+                    System.out.println("Pire 10 chauffeurs: ");
+                    for (Utilisateur u : admin.getTop10WorstDrivers()) {
+                        System.out.println(u + " | Reputation: " + u.getReputation());
+                    }
+                    System.out.println("Top 10 passagers: ");
+                    for (Utilisateur u : admin.getTop10Passengers()) {
+                        System.out.println(u + " | Reputation: " + u.getReputation());
+                    }
+                    System.out.println("Pire 10 passagers: ");
+                    for (Utilisateur u : admin.getTop10WorstPassengers()) {
+                        System.out.println(u + " | Reputation: " + u.getReputation());
+                    }
+                    break;
+                case "10":
+                    System.out.print("Seuil de réputation pour bannir (ex: 2.5): ");
+                    double seuil = Double.parseDouble(scanner.nextLine());
+                    admin.banUsersBelowReputation(seuil);
+                    System.out.println("Utilisateurs bannis avec une réputation inférieure à " + seuil);
                     break;
                 default:
                     System.out.println("invalid choice");
