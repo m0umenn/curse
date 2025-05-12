@@ -1,4 +1,4 @@
-// Classe abstraite Utilisateur
+
 public abstract class Utilisateur {
     protected String nom;
     protected String prenom;

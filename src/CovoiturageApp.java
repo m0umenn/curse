@@ -15,13 +15,13 @@ public class CovoiturageApp {
         while (!quitter) {
             System.out.println("\n--- Menu Principal ---");
             System.out.println("1. Ajouter un utilisateur");
-            System.out.println("2. Afficher les utilisateurs");
-            System.out.println("3. Modifier le profil d'un utilisateur");
-            System.out.println("4. Demander une course (passager)");
-            System.out.println("5. Sauvegarder les utilisateurs");
-            System.out.println("6. Evaluer un chauffeur");       
-            System.out.println("7. Administrateur");
-            System.out.println("8. Quitter et sauvegarder");
+
+            System.out.println("2. Modifier le profil d'un utilisateur");
+            System.out.println("3. Demander une course (passager)");
+            System.out.println("4. Sauvegarder les utilisateurs");
+            System.out.println("5. Evaluer un chauffeur");
+            System.out.println("6. Administrateur");
+            System.out.println("7. Quitter et sauvegarder");
             System.out.print("Votre choix : ");
             int choix = scanner.nextInt();
             scanner.nextLine(); // Consommer le retour à la ligne
@@ -30,26 +30,24 @@ public class CovoiturageApp {
                 case 1:
                     ajouterUtilisateur();
                     break;
+
                 case 2:
-                    afficherUtilisateurs();
-                    break;
-                case 3:
                     modifierProfilUtilisateur();
                     break;
-                case 4:
+                case 3:
                     demanderCourse();
                     break;
-                case 5:
+                case 4:
                     FichierUtilisateurs.sauvegarderUtilisateurs(admin.getUtilisateurs(), FICHIER_UTILISATEURS);
                     System.out.println("Utilisateurs sauvegardés.");
                     break;
-                case 6 :
+                case 5 :
                     evaluerChauffeur();
                     break;
-                case 7 :
+                case 6 :
                     administrateurtools(0);
                     break;
-                case 8:
+                case 7:
                     quitter = true;
                     break;
                 default:
@@ -132,9 +130,11 @@ public class CovoiturageApp {
         System.out.println("Profil actuel :");
         System.out.println("Statut : " + profil.getStatut());
         System.out.println("Itinéraire : " + profil.getItineraire());
-        System.out.println("Préférences : " + profil.getPreferences());
         System.out.println("Disponibilités : " + profil.getDisponibilites());
         System.out.println("Type de course : " + profil.getTypeCourse());
+        System.out.println("Préférence musique : " + profil.getMusicPreference());
+        System.out.println("Préférence genre : " + profil.getGenderPreference());
+        System.out.println("Taille bagages : " + profil.getLuggageSize());
 
         System.out.println("--- Modification du profil ---");
         System.out.print("Nouveau statut (1=PASSAGER, 2=CHAUFFEUR) : ");
@@ -147,10 +147,6 @@ public class CovoiturageApp {
         String itineraire = scanner.nextLine();
         profil.setItineraire(itineraire);
 
-        System.out.print("Nouvelles préférences : ");
-        String preferences = scanner.nextLine();
-        profil.setPreferences(preferences);
-
         System.out.print("Nouvelles disponibilités : ");
         String disponibilites = scanner.nextLine();
         profil.setDisponibilites(disponibilites);
@@ -161,6 +157,30 @@ public class CovoiturageApp {
         if (typeCourse == 1) profil.setTypeCourse(Profil.TypeCourse.ALLER_RETOUR);
         else if (typeCourse == 2) profil.setTypeCourse(Profil.TypeCourse.ALLER_SIMPLE);
         else if (typeCourse == 3) profil.setTypeCourse(Profil.TypeCourse.RETOUR_SIMPLE);
+
+        // New preference options
+        System.out.println("\n--- Nouvelles préférences ---");
+        System.out.print("Préférence musique (1=OUI, 2=NON, 3=PEU IMPORTE) : ");
+        int musicPref = scanner.nextInt();
+        scanner.nextLine();
+        if (musicPref == 1) profil.setMusicPreference(Profil.MusicPreference.YES);
+        else if (musicPref == 2) profil.setMusicPreference(Profil.MusicPreference.NO);
+        else if (musicPref == 3) profil.setMusicPreference(Profil.MusicPreference.DONT_CARE);
+
+        System.out.print("Préférence genre (1=HOMME, 2=FEMME, 3=PEU IMPORTE) : ");
+        int genderPref = scanner.nextInt();
+        scanner.nextLine();
+        if (genderPref == 1) profil.setGenderPreference(Profil.GenderPreference.MALE);
+        else if (genderPref == 2) profil.setGenderPreference(Profil.GenderPreference.FEMALE);
+        else if (genderPref == 3) profil.setGenderPreference(Profil.GenderPreference.ANY);
+
+        System.out.print("Taille des bagages (1=AUCUN, 2=PETIT, 3=MOYEN, 4=GRAND) : ");
+        int luggageSize = scanner.nextInt();
+        scanner.nextLine();
+        if (luggageSize == 1) profil.setLuggageSize(Profil.LuggageSize.NONE);
+        else if (luggageSize == 2) profil.setLuggageSize(Profil.LuggageSize.SMALL);
+        else if (luggageSize == 3) profil.setLuggageSize(Profil.LuggageSize.MEDIUM);
+        else if (luggageSize == 4) profil.setLuggageSize(Profil.LuggageSize.LARGE);
 
         System.out.println("Profil modifié avec succès !");
     }
@@ -199,23 +219,40 @@ public class CovoiturageApp {
                     && u.getProfil().getItineraire() != null
                     && !u.getMatricule().equals(passager.getMatricule())
                     && u.getProfil().getItineraire().equalsIgnoreCase(itineraireRecherche)) {
-                chauffeursDisponibles.add(u);
+                
+                // Vérifier les préférences de musique
+                boolean musicMatch = u.getProfil().getMusicPreference() == Profil.MusicPreference.DONT_CARE ||
+                                   u.getProfil().getMusicPreference() == profilPassager.getMusicPreference();
+                
+                // Vérifier les préférences de genre
+                boolean genderMatch = u.getProfil().getGenderPreference() == Profil.GenderPreference.ANY ||
+                                    u.getProfil().getGenderPreference() == profilPassager.getGenderPreference();
+                
+                // Vérifier la compatibilité des bagages
+                boolean luggageMatch = u.getProfil().getLuggageSize().ordinal() >= profilPassager.getLuggageSize().ordinal();
+                
+                if (musicMatch && genderMatch && luggageMatch) {
+                    chauffeursDisponibles.add(u);
+                }
             }
-            // add preferences and  disponibilite match
         }
 
         if (chauffeursDisponibles.isEmpty()) {
-            System.out.println("Aucun chauffeur disponible pour cet itinéraire.");
+            System.out.println("Aucun chauffeur disponible pour cet itinéraire avec vos préférences.");
             return;
         }
 
         System.out.println("Chauffeurs disponibles pour l'itinéraire '" + itineraireRecherche + "' :");
         for (int i = 0; i < chauffeursDisponibles.size(); i++) {
             Utilisateur chauffeur = chauffeursDisponibles.get(i);
+            Profil profilChauffeur = chauffeur.getProfil();
             System.out.println((i+1) + ". " + chauffeur.getNom() + " " + chauffeur.getPrenom() +
-                    " (" + chauffeur.getMatricule() + "), Disponibilités : " + chauffeur.getProfil().getDisponibilites());
+                    " (" + chauffeur.getMatricule() + ")");
+            System.out.println("   Disponibilités : " + profilChauffeur.getDisponibilites());
+            System.out.println("   Musique : " + profilChauffeur.getMusicPreference());
+            System.out.println("   Genre : " + profilChauffeur.getGenderPreference());
+            System.out.println("   Taille bagages acceptée : " + profilChauffeur.getLuggageSize());
         }
-
 
         System.out.print("Choisissez un chauffeur (numéro) ou 0 pour annuler : ");
         int choix = scanner.nextInt();
@@ -225,8 +262,9 @@ public class CovoiturageApp {
             Utilisateur chauffeurChoisi = chauffeursDisponibles.get(choix - 1);
             System.out.println("Vous avez rejoint la course du chauffeur " +
                     chauffeurChoisi.getNom() + " " + chauffeurChoisi.getPrenom() + " !");
-            // Ici, tu pourrais ajouter la logique pour enregistrer la course/passager si tu veux aller plus loin
-            Course c = new Course(chauffeurChoisi,passager,itineraireRecherche,chauffeurChoisi.getProfil().getDisponibilites(),chauffeurChoisi.getProfil().getTypeCourse());
+            Course c = new Course(chauffeurChoisi, passager, itineraireRecherche, 
+                                chauffeurChoisi.getProfil().getDisponibilites(),
+                                chauffeurChoisi.getProfil().getTypeCourse());
             admin.ajouterCourse(c);
         } else {
             System.out.println("Action annulée.");

@@ -1,1 +1,5 @@
-Etudiant;benmerabet;mohamed ali;232331610113;5.0;2023;info;acad
+Etudiant;benmerabet;mohamed ali;232331610113;5.0;2023;info;acad;PASSAGER;;;ALLER_RETOUR;DONT_CARE;ANY;NONE
+ATS;karim;elgang;0668557802;5.0;2009;security;PASSAGER;;;ALLER_RETOUR;DONT_CARE;ANY;NONE
+Enseignant;hhhh;hhhhh;2345667;5.0;2012;info;PASSAGER;;;ALLER_RETOUR;DONT_CARE;ANY;NONE
+Etudiant;bouterrouma;abdelmoumene;232331499218;5.0;2023;info;acad;PASSAGER;kouba;08h;ALLER_RETOUR;YES;ANY;SMALL
+Etudiant;bensalem;amine;232312345678;5.0;2023;info;acad;CHAUFFEUR;kouba;08h;ALLER_RETOUR;YES;ANY;SMALL

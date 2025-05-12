@@ -20,7 +20,7 @@ public class Evaluation {
 
     @Override
     public String toString() {
-        return "evaluee : " + evaluee + "note : " + note + "commentaire : "
+        return "evaluee : " + evaluee + " note : " + note + " commentaire : "
                 + commentaire + "";
     }
 
