@@ -7,7 +7,7 @@ public class FichierUtilisateurs {
     public static void sauvegarderUtilisateurs(List<Utilisateur> utilisateurs, String nomFichier) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichier))) {
             for (Utilisateur u : utilisateurs) {
-                // Format : type;nom;prenom;matricule;reputation;[infos spécifiques]
+                // Format : type;nom;prenom;matricule;reputation;[infos spécifiques]
                 String ligne = u.getType() + ";" + u.getNom() + ";" + u.getPrenom() + ";" + u.getMatricule() + ";" + u.getReputation();
                 if (u instanceof Etudiant) {
                     Etudiant e = (Etudiant) u;
@@ -23,29 +23,64 @@ public class FichierUtilisateurs {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Erreur lors de la sauvegarde des utilisateurs : " + e.getMessage());
+            System.out.println("Erreur lors de la sauvegarde des utilisateurs : " + e.getMessage());
         }
     }
 
     // Charger la liste des utilisateurs depuis un fichier
     public static List<Utilisateur> chargerUtilisateurs(String nomFichier) {
         List<Utilisateur> utilisateurs = new ArrayList<>();
+        File file = new File(nomFichier);
+        
+        // Check if file exists
+        if (!file.exists() || file.length() == 0) {
+            System.out.println("Le fichier " + nomFichier + " n'existe pas ou est vide.");
+            return utilisateurs;
+        }
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(nomFichier))) {
             String ligne;
             while ((ligne = reader.readLine()) != null) {
-                String[] parts = ligne.split(";");
-                String type = parts[0];
-                if (type.equals("Etudiant")) {
-                    utilisateurs.add(new Etudiant(parts[1], parts[2], parts[3], Integer.parseInt(parts[5]), parts[6], parts[7]));
-                } else if (type.equals("Enseignant")) {
-                    utilisateurs.add(new Enseignant(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7]));
-                } else if (type.equals("ATS")) {
-                    utilisateurs.add(new ATS(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7]));
+                try {
+                    String[] parts = ligne.split(";");
+                    if (parts.length < 5) {
+                        System.out.println("Format de ligne invalide: " + ligne);
+                        continue;
+                    }
+                    
+                    String type = parts[0];
+                    String nom = parts[1];
+                    String prenom = parts[2];
+                    String matricule = parts[3];
+                    double reputation = Double.parseDouble(parts[4]);
+                    
+                    Utilisateur utilisateur = null;
+                    
+                    if (type.equals("Etudiant") && parts.length >= 8) {
+                        int annee = Integer.parseInt(parts[5]);
+                        String faculte = parts[6];
+                        String specialite = parts[7];
+                        utilisateur = new Etudiant(nom, prenom, matricule, annee, faculte, specialite);
+                    } else if (type.equals("Enseignant") && parts.length >= 7) {
+                        int annee = Integer.parseInt(parts[5]);
+                        String faculte = parts[6];
+                        utilisateur = new Enseignant(nom, prenom, matricule, annee, faculte);
+                    } else if (type.equals("ATS") && parts.length >= 7) {
+                        int annee = Integer.parseInt(parts[5]);
+                        String service = parts[6];
+                        utilisateur = new ATS(nom, prenom, matricule, annee, service);
+                    }
+                    
+                    if (utilisateur != null) {
+                        utilisateur.setReputation(reputation);
+                        utilisateurs.add(utilisateur);
+                    }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Erreur lors du traitement de la ligne: " + ligne + ", erreur: " + e.getMessage());
                 }
-                // On peut aussi charger la réputation si besoin
             }
         } catch (IOException e) {
-            System.out.println("Erreur lors du chargement des utilisateurs : " + e.getMessage());
+            System.out.println("Erreur lors du chargement des utilisateurs : " + e.getMessage());
         }
         return utilisateurs;
     }
