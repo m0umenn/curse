@@ -1,4 +1,3 @@
-// Classe Enseignant qui hérite de Utilisateur
 public class Enseignant extends Utilisateur {
     private int anneeRecrutement;
     private String faculte;

@@ -1,4 +1,3 @@
-// Classe Evaluation
 public class Evaluation {
     private Utilisateur evaluateur;
     private Utilisateur evaluee;

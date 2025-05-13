@@ -25,7 +25,6 @@ public class Profil {
         this.luggageSize = LuggageSize.NONE;
     }
 
-    // Getters et setters
     public Statut getStatut() { return statut; }
     public void setStatut(Statut statut) { this.statut = statut; }
 

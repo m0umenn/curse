@@ -1,4 +1,4 @@
-// Classe Etudiant qui hérite de Utilisateur
+
 public class Etudiant extends Utilisateur {
     private int anneeAdmission;
     private String faculte;

@@ -18,7 +18,7 @@ public abstract class Utilisateur {
 
     // meriem
 
-    // Méthodes d'accès (getters/setters)
+
     public String getNom() { return nom; }
     public String getPrenom() { return prenom; }
     public String getMatricule() { return matricule; }
