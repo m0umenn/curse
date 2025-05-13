@@ -14,14 +14,14 @@ public class CovoiturageApp {
         boolean quitter = false;
         while (!quitter) {
             System.out.println("\n--- Menu Principal ---");
-            System.out.println("1. Ajouter un utilisateur");
-            System.out.println("2. Modifier le profil d'un utilisateur");
-            System.out.println("3. Demander une course (passager)");
-            System.out.println("4. Sauvegarder les utilisateurs");
-            System.out.println("5. Evaluer un chauffeur");
-            System.out.println("6. Administrateur");
-            System.out.println("7. Quitter et sauvegarder");
-            System.out.print("Votre choix : ");
+            System.out.println("1. Ajouter un utilisateur"); // meriem
+            System.out.println("2. Modifier le profil d'un utilisateur"); // meriem 
+            System.out.println("3. Demander une course (passager)");  // maria bousri
+            System.out.println("4. Sauvegarder les utilisateurs"); // meriem
+            System.out.println("5. Evaluer un chauffeur"); // ali
+            System.out.println("6. Administrateur"); // moumen
+            System.out.println("7. Quitter et sauvegarder"); // ali
+            System.out.print("Votre choix : "); // ali (menu)
             int choix = scanner.nextInt();
             scanner.nextLine(); // Consommer le retour à la ligne
 

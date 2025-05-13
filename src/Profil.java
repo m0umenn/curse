@@ -13,6 +13,8 @@ public class Profil {
     private GenderPreference genderPreference;
     private LuggageSize luggageSize;
 
+    // ali
+
     public Profil() {
         this.statut = Statut.PASSAGER;
         this.itineraire = "";

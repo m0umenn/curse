@@ -5,6 +5,8 @@ public class Evaluation {
     private int note; // de 1 à 5
     private String commentaire;
 
+    // maria
+
     public Evaluation(Utilisateur evaluateur,Utilisateur evaluee,int note, String commentaire) {
         this.evaluateur = evaluateur;
         this.evaluee = evaluee;

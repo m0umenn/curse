@@ -3,6 +3,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 // Classe Course
+// maria
 public class Course {
     private Utilisateur chauffeur;
     private List<Utilisateur> passagers;
@@ -11,6 +12,8 @@ public class Course {
     private Profil.TypeCourse typeCourse;
     private List<Evaluation> evaluations; // Liste des évaluations reçues
     private LocalDateTime dateTime;
+
+    
 
     public Course(Utilisateur chauffeur, Utilisateur pass, String itineraire, String horaires, Profil.TypeCourse typeCourse, LocalDateTime dateTime) {
         this.chauffeur = chauffeur;
