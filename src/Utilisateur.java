@@ -16,6 +16,8 @@ public abstract class Utilisateur {
         this.gender = gender;
     }
 
+    // meriem
+
     // Méthodes d'accès (getters/setters)
     public String getNom() { return nom; }
     public String getPrenom() { return prenom; }
