@@ -267,8 +267,7 @@ public class CovoiturageApp {
             Utilisateur chauffeurChoisi = chauffeursDisponibles.get(choix - 1);
             System.out.println("Vous avez rejoint la course du chauffeur " +
                     chauffeurChoisi.getNom() + " " + chauffeurChoisi.getPrenom() + " !");
-            // Prompt for date/ti6
-            //me
+
             System.out.print("Entrez la date et l'heure de la course (format: yyyy-MM-ddTHH:mm, ex: 2024-06-01T14:30) : ");
             String dateTimeStr = scanner.nextLine();
             java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(dateTimeStr);
