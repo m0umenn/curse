@@ -3,12 +3,12 @@ import java.util.*;
 
 public class FichierUtilisateurs {
 
-    // Sauvegarder la liste des utilisateurs dans un fichier
+
     public static void sauvegarderUtilisateurs(List<Utilisateur> utilisateurs, String nomFichier) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichier))) {
             for (Utilisateur u : utilisateurs) {
-                // Format : type;nom;prenom;matricule;reputation;[infos spécifiques];profil fields
-                String ligne = u.getType() + ";" + u.getNom() + ";" + u.getPrenom() + ";" + u.getMatricule() + ";" + u.getReputation();
+                // Frmat: type;nom;prenom;matricule;gender;reputation;[infos spécifiques];profil fields
+                String ligne = u.getType() + ";" + u.getNom() + ";" + u.getPrenom() + ";" + u.getMatricule() + ";" + u.getGender().name() + ";" + u.getReputation();
                 if (u instanceof Etudiant) {
                     Etudiant e = (Etudiant) u;
                     ligne += ";" + e.getAnneeAdmission() + ";" + e.getFaculte() + ";" + e.getSpecialite();
@@ -44,22 +44,23 @@ public class FichierUtilisateurs {
                 String[] parts = ligne.split(";");
                 String type = parts[0];
                 Utilisateur user = null;
+                Utilisateur.Gender gender = Utilisateur.Gender.valueOf(parts[4]);
                 if (type.equals("Etudiant")) {
-                    user = new Etudiant(parts[1], parts[2], parts[3], Integer.parseInt(parts[5]), parts[6], parts[7]);
+                    user = new Etudiant(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7], parts[8], gender);
                 } else if (type.equals("Enseignant")) {
-                    user = new Enseignant(parts[1], parts[2], parts[3], Integer.parseInt(parts[5]), parts[6]);
+                    user = new Enseignant(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7], gender);
                 } else if (type.equals("ATS")) {
-                    user = new ATS(parts[1], parts[2], parts[3], Integer.parseInt(parts[5]), parts[6]);
+                    user = new ATS(parts[1], parts[2], parts[3], Integer.parseInt(parts[6]), parts[7], gender);
                 }
-                if (user != null && parts.length >= 15) {
+                if (user != null && parts.length >= 16) {
                     Profil p = user.getProfil();
-                    p.setStatut(Profil.Statut.valueOf(parts[8]));
-                    p.setItineraire(parts[9]);
-                    p.setDisponibilites(parts[10]);
-                    p.setTypeCourse(Profil.TypeCourse.valueOf(parts[11]));
-                    p.setMusicPreference(Profil.MusicPreference.valueOf(parts[12]));
-                    p.setGenderPreference(Profil.GenderPreference.valueOf(parts[13]));
-                    p.setLuggageSize(Profil.LuggageSize.valueOf(parts[14]));
+                    p.setStatut(Profil.Statut.valueOf(parts[9]));
+                    p.setItineraire(parts[10]);
+                    p.setDisponibilites(parts[11]);
+                    p.setTypeCourse(Profil.TypeCourse.valueOf(parts[12]));
+                    p.setMusicPreference(Profil.MusicPreference.valueOf(parts[13]));
+                    p.setGenderPreference(Profil.GenderPreference.valueOf(parts[14]));
+                    p.setLuggageSize(Profil.LuggageSize.valueOf(parts[15]));
                 }
                 if (user != null) {
                     utilisateurs.add(user);

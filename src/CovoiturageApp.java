@@ -68,6 +68,10 @@ public class CovoiturageApp {
         String prenom = scanner.nextLine();
         System.out.print("Matricule : ");
         String matricule = scanner.nextLine();
+        System.out.print("Genre (1=HOMME, 2=FEMME) : ");
+        int genderInt = scanner.nextInt();
+        scanner.nextLine();
+        Utilisateur.Gender gender = (genderInt == 1) ? Utilisateur.Gender.MALE : Utilisateur.Gender.FEMALE;
 
         Utilisateur u = null;
         if (type == 1) {
@@ -78,21 +82,21 @@ public class CovoiturageApp {
             String faculte = scanner.nextLine();
             System.out.print("Spécialité : ");
             String specialite = scanner.nextLine();
-            u = new Etudiant(nom, prenom, matricule, annee, faculte, specialite);
+            u = new Etudiant(nom, prenom, matricule, annee, faculte, specialite, gender);
         } else if (type == 2) {
             System.out.print("Année de recrutement : ");
             int annee = scanner.nextInt();
             scanner.nextLine();
             System.out.print("Faculté : ");
             String faculte = scanner.nextLine();
-            u = new Enseignant(nom, prenom, matricule, annee, faculte);
+            u = new Enseignant(nom, prenom, matricule, annee, faculte, gender);
         } else if (type == 3) {
             System.out.print("Année de recrutement : ");
             int annee = scanner.nextInt();
             scanner.nextLine();
             System.out.print("Service : ");
             String service = scanner.nextLine();
-            u = new ATS(nom, prenom, matricule, annee, service);
+            u = new ATS(nom, prenom, matricule, annee, service, gender);
         }
         if (u != null) {
             admin.ajouterUtilisateur(u);
@@ -218,18 +222,20 @@ public class CovoiturageApp {
                     && u.getProfil().getItineraire() != null
                     && !u.getMatricule().equals(passager.getMatricule())
                     && u.getProfil().getItineraire().equalsIgnoreCase(itineraireRecherche)) {
-                
                 // Vérifier les préférences de musique
                 boolean musicMatch = u.getProfil().getMusicPreference() == Profil.MusicPreference.DONT_CARE ||
                                    u.getProfil().getMusicPreference() == profilPassager.getMusicPreference();
-                
                 // Vérifier les préférences de genre
-                boolean genderMatch = u.getProfil().getGenderPreference() == Profil.GenderPreference.ANY ||
-                                    u.getProfil().getGenderPreference() == profilPassager.getGenderPreference();
-                
+                boolean genderMatch =
+                    (u.getProfil().getGenderPreference() == Profil.GenderPreference.ANY ||
+                     (u.getProfil().getGenderPreference() == Profil.GenderPreference.MALE && passager.getGender() == Utilisateur.Gender.MALE) ||
+                     (u.getProfil().getGenderPreference() == Profil.GenderPreference.FEMALE && passager.getGender() == Utilisateur.Gender.FEMALE))
+                    &&
+                    (profilPassager.getGenderPreference() == Profil.GenderPreference.ANY ||
+                     (profilPassager.getGenderPreference() == Profil.GenderPreference.MALE && u.getGender() == Utilisateur.Gender.MALE) ||
+                     (profilPassager.getGenderPreference() == Profil.GenderPreference.FEMALE && u.getGender() == Utilisateur.Gender.FEMALE));
                 // Vérifier la compatibilité des bagages
                 boolean luggageMatch = u.getProfil().getLuggageSize().ordinal() >= profilPassager.getLuggageSize().ordinal();
-                
                 if (musicMatch && genderMatch && luggageMatch) {
                     chauffeursDisponibles.add(u);
                 }
@@ -261,7 +267,8 @@ public class CovoiturageApp {
             Utilisateur chauffeurChoisi = chauffeursDisponibles.get(choix - 1);
             System.out.println("Vous avez rejoint la course du chauffeur " +
                     chauffeurChoisi.getNom() + " " + chauffeurChoisi.getPrenom() + " !");
-            // Prompt for date/time
+            // Prompt for date/ti6
+            //me
             System.out.print("Entrez la date et l'heure de la course (format: yyyy-MM-ddTHH:mm, ex: 2024-06-01T14:30) : ");
             String dateTimeStr = scanner.nextLine();
             java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(dateTimeStr);

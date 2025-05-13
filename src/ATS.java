@@ -3,8 +3,8 @@ public class ATS extends Utilisateur {
     private int anneeRecrutement;
     private String service;
 
-    public ATS(String nom, String prenom, String matricule, int anneeRecrutement, String service) {
-        super(nom, prenom, matricule);
+    public ATS(String nom, String prenom, String matricule, int anneeRecrutement, String service, Gender gender) {
+        super(nom, prenom, matricule, gender);
         this.anneeRecrutement = anneeRecrutement;
         this.service = service;
     }

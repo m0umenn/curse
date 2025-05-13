@@ -3,8 +3,8 @@ public class Enseignant extends Utilisateur {
     private int anneeRecrutement;
     private String faculte;
 
-    public Enseignant(String nom, String prenom, String matricule, int anneeRecrutement, String faculte) {
-        super(nom, prenom, matricule);
+    public Enseignant(String nom, String prenom, String matricule, int anneeRecrutement, String faculte, Gender gender) {
+        super(nom, prenom, matricule, gender);
         this.anneeRecrutement = anneeRecrutement;
         this.faculte = faculte;
     }

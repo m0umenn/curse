@@ -29,7 +29,9 @@ public class Administrateur {
     // Supprimer (bannir) un utilisateur
     public void bannirUtilisateur(Utilisateur utilisateur) {
         utilisateurs.remove(utilisateur);
-        utilisateursBannis.add(utilisateur);
+        if (!utilisateursBannis.contains(utilisateur)) {
+            utilisateursBannis.add(utilisateur);
+        }
     }
 
     // Ajouter une course
